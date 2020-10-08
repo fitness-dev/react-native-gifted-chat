@@ -37,6 +37,7 @@ const styles = {
     container: {
       flex: 1,
       alignItems: 'flex-start',
+      overflow: "hidden",
     },
     wrapper: {
       borderRadius: 15,
@@ -44,6 +45,7 @@ const styles = {
       marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
+      overflow: "hidden",
     },
     containerToNext: {
       borderBottomLeftRadius: 3,
@@ -60,6 +62,7 @@ const styles = {
     container: {
       flex: 1,
       alignItems: 'flex-end',
+      overflow: "hidden",
     },
     wrapper: {
       borderRadius: 15,
@@ -67,6 +70,7 @@ const styles = {
       marginLeft: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
+      overflow: "hidden",
     },
     containerToNext: {
       borderBottomRightRadius: 3,

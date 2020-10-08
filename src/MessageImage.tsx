@@ -8,6 +8,8 @@ import {
   ViewStyle,
   StyleProp,
   ImageStyle,
+  ImageURISource,
+  Text,
 } from 'react-native'
 // TODO: support web
 // @ts-ignore
@@ -20,9 +22,8 @@ const styles = StyleSheet.create({
   image: {
     width: 150,
     height: 100,
-    borderRadius: 13,
-    margin: 3,
-    resizeMode: 'cover',
+    margin: 0,
+    resizeMode: 'contain',
   },
   imageActive: {
     flex: 1,
@@ -40,7 +41,7 @@ export interface MessageImageProps<TMessage extends IMessage> {
 
 export default class MessageImage<
   TMessage extends IMessage = IMessage
-> extends Component<MessageImageProps<TMessage>> {
+  > extends Component<MessageImageProps<TMessage>> {
   static defaultProps = {
     currentMessage: {
       image: null,
@@ -58,32 +59,52 @@ export default class MessageImage<
     imageProps: PropTypes.object,
     lightboxProps: PropTypes.object,
   }
+
+  state = {
+    loading: true,
+    error: false,
+  }
+
   render() {
-    const {
-      containerStyle,
-      lightboxProps,
-      imageProps,
-      imageStyle,
-      currentMessage,
-    } = this.props
+    const { containerStyle, lightboxProps, imageProps, imageStyle, currentMessage, } = this.props;
+
+    const content: ImageURISource = currentMessage?.image as ImageURISource;
+    const ratio = content?.width && content?.height ? content.width / content!.height : 1;
+    const width = content?.width ? Math.min(content.width, 150) : 150;
+
+    const imageContainerStyles = {
+      width: width || 150,
+      height: width / ratio || 150,
+      justifyContent: "center",
+      overflow: "hidden",
+      alignSelf: "center",
+      margin: 0
+    } as any;
+
     if (!!currentMessage) {
-      return (
-        <View style={[styles.container, containerStyle]}>
-          <Lightbox
-            activeProps={{
-              style: styles.imageActive,
-            }}
-            {...lightboxProps}
+      return (<View style={[styles.container, containerStyle]}>
+        <Lightbox activeProps={{
+          style: styles.imageActive,
+        }} {...lightboxProps}>
+          <View
+            style={imageContainerStyles}
           >
-            <Image
-              {...imageProps}
-              style={[styles.image, imageStyle]}
-              source={{ uri: currentMessage.image }}
-            />
-          </Lightbox>
-        </View>
-      )
+            {this.state.error ?
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#1a1a1a" }}>
+                <Text style={{ color: "#494949", fontSize: 64 }}>
+                  !
+                </Text>
+              </View>
+              : <Image
+                {...imageProps}
+                style={[styles.image, imageStyle, { height: "100%", width: "100%" }]}
+                source={content}
+              />
+            }
+          </View>
+        </Lightbox>
+      </View>);
     }
-    return null
+    return null;
   }
 }

@@ -1,4 +1,4 @@
-import { StyleProp, ViewStyle } from 'react-native'
+import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native'
 
 export { ActionsProps } from './Actions'
 export { AvatarProps } from './Avatar'
@@ -53,7 +53,7 @@ export interface IMessage {
   text: string
   createdAt: Date | number
   user: User
-  image?: string
+  image?: ImageSourcePropType
   video?: string
   audio?: string
   system?: boolean

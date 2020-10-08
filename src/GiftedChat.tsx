@@ -16,7 +16,7 @@ import {
   ActionSheetProvider,
   ActionSheetOptions,
 } from '@expo/react-native-action-sheet'
-import uuid from 'uuid'
+import * as uuid from 'uuid'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'

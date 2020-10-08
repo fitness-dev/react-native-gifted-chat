@@ -18,6 +18,7 @@ const styles = {
       justifyContent: 'flex-start',
       marginLeft: 8,
       marginRight: 0,
+      overflow: "hidden",
     },
   }),
   right: StyleSheet.create({
@@ -27,6 +28,7 @@ const styles = {
       justifyContent: 'flex-end',
       marginLeft: 0,
       marginRight: 8,
+      overflow: "hidden",
     },
   }),
 }
