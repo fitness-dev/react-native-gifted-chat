@@ -9,6 +9,7 @@ import {
   StyleProp,
   ImageStyle,
   ImageURISource,
+  Platform,
   Text,
 } from 'react-native'
 // TODO: support web
@@ -82,10 +83,8 @@ export default class MessageImage<
     } as any;
 
     if (!!currentMessage) {
-      return (<View style={[styles.container, containerStyle]}>
-        <Lightbox activeProps={{
-          style: styles.imageActive,
-        }} {...lightboxProps}>
+      if (Platform.OS === 'web') {
+        return (
           <View
             style={imageContainerStyles}
           >
@@ -93,7 +92,7 @@ export default class MessageImage<
               <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#1a1a1a" }}>
                 <Text style={{ color: "#494949", fontSize: 64 }}>
                   !
-                </Text>
+                  </Text>
               </View>
               : <Image
                 {...imageProps}
@@ -101,9 +100,32 @@ export default class MessageImage<
                 source={content}
               />
             }
-          </View>
-        </Lightbox>
-      </View>);
+          </View>);
+      }
+      else {
+        return (<View style={[styles.container, containerStyle]}>
+          <Lightbox activeProps={{
+            style: styles.imageActive,
+          }} {...lightboxProps}>
+            <View
+              style={imageContainerStyles}
+            >
+              {this.state.error ?
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#1a1a1a" }}>
+                  <Text style={{ color: "#494949", fontSize: 64 }}>
+                    !
+                </Text>
+                </View>
+                : <Image
+                  {...imageProps}
+                  style={[styles.image, imageStyle, { height: "100%", width: "100%" }]}
+                  source={content}
+                />
+              }
+            </View>
+          </Lightbox>
+        </View>);
+      }
     }
     return null;
   }
