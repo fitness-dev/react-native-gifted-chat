@@ -304,9 +304,9 @@ export default class MessageContainer<
         user,
         key: item._id,
         currentMessage: item,
-        previousMessage,
+        previousMessage: previousMessage as any,
         inverted,
-        nextMessage,
+        nextMessage: nextMessage as any,
         position: item.user._id === user._id ? 'right' : 'left',
       }
 
