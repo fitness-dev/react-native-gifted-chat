@@ -380,8 +380,8 @@ export default class Bubble<
         nextMessage
       } = this.props
 
-      let firstMessage = previousMessage?.user?._id !== currentMessage?.user?._id;
-      let hasNextMessage = nextMessage?.user?._id === currentMessage?.user?._id;
+      const firstMessage = previousMessage?.user?._id !== currentMessage?.user?._id;
+      const hasNextMessage = nextMessage?.user?._id === currentMessage?.user?._id;
 
       return (
         <MessageImage

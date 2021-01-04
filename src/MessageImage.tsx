@@ -115,7 +115,7 @@ export default class MessageImage<
         borderStyle.borderTopLeftRadius = borderStyle.borderTopRightRadius = 14;
       }
     }
-    
+
     if (this.props.position === "left") {
       borderStyle.borderTopRightRadius = 14;
     } else {
@@ -150,8 +150,8 @@ export default class MessageImage<
                 style: styles.imageActive,
               }}
               renderHeader={() => null}
-              onOpen={() => this.setState({lightboxOpen: true})}
-              onClose={() => this.setState({lightboxOpen: false})}
+              onOpen={() => this.setState({ lightboxOpen: true })}
+              onClose={() => this.setState({ lightboxOpen: false })}
               {...lightboxProps}
             >
               <View
