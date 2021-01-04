@@ -37,7 +37,7 @@ const styles = {
     container: {
       flex: 1,
       alignItems: 'flex-start',
-      overflow: "hidden",
+      overflow: "visible",
     },
     wrapper: {
       borderRadius: 15,
@@ -45,7 +45,7 @@ const styles = {
       marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
-      overflow: "hidden",
+      overflow: "visible",
     },
     containerToNext: {
       borderBottomLeftRadius: 3,
@@ -62,7 +62,7 @@ const styles = {
     container: {
       flex: 1,
       alignItems: 'flex-end',
-      overflow: "hidden",
+      overflow: "visible",
     },
     wrapper: {
       borderRadius: 15,
@@ -70,7 +70,7 @@ const styles = {
       marginLeft: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
-      overflow: "hidden",
+      overflow: "visible",
     },
     containerToNext: {
       borderBottomRightRadius: 3,
@@ -373,7 +373,23 @@ export default class Bubble<
       if (this.props.renderMessageImage) {
         return this.props.renderMessageImage(messageImageProps)
       }
-      return <MessageImage {...messageImageProps} />
+
+      const {
+        currentMessage,
+        previousMessage,
+        nextMessage
+      } = this.props
+
+      let firstMessage = previousMessage?.user?._id !== currentMessage?.user?._id;
+      let hasNextMessage = nextMessage?.user?._id === currentMessage?.user?._id;
+
+      return (
+        <MessageImage
+          firstMessage={firstMessage}
+          hasNextMessage={hasNextMessage}
+          {...messageImageProps}
+        />
+      );
     }
     return null
   }

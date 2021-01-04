@@ -11,6 +11,7 @@ import {
   ImageURISource,
   Platform,
   Text,
+  ActivityIndicator,
 } from 'react-native'
 // TODO: support web
 // @ts-ignore
@@ -18,11 +19,11 @@ import Lightbox from 'react-native-lightbox'
 import { IMessage } from './Models'
 import { StylePropType } from './utils'
 
+
+
 const styles = StyleSheet.create({
   container: {},
   image: {
-    width: 150,
-    height: 100,
     margin: 0,
     resizeMode: 'contain',
   },
@@ -30,14 +31,33 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'contain',
   },
+  loadingOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    alignItems: "center",
+    justifyContent: "center",
+  }
 })
 
 export interface MessageImageProps<TMessage extends IMessage> {
+  firstMessage?: boolean;
+  hasNextMessage?: boolean;
+  position?: "left" | "right";
   currentMessage?: TMessage
   containerStyle?: StyleProp<ViewStyle>
   imageStyle?: StyleProp<ImageStyle>
   imageProps?: Partial<ImageProps>
   lightboxProps?: object
+}
+
+export const LoadingOverlay: React.FC<{ loading: boolean }> = (props) => {
+
+  if (!props.loading) return null;
+
+  return (
+    <View style={[styles.loadingOverlay, StyleSheet.absoluteFill]}>
+      <ActivityIndicator size={"small"} />
+    </View>
+  );
 }
 
 export default class MessageImage<
@@ -51,6 +71,8 @@ export default class MessageImage<
     imageStyle: {},
     imageProps: {},
     lightboxProps: {},
+    firstMessage: false,
+    position: "right"
   }
 
   static propTypes = {
@@ -64,6 +86,7 @@ export default class MessageImage<
   state = {
     loading: true,
     error: false,
+    lightboxOpen: false,
   }
 
   render() {
@@ -77,10 +100,27 @@ export default class MessageImage<
       width: width || 150,
       height: width / ratio || 150,
       justifyContent: "center",
-      overflow: "hidden",
+      overflow: "visible",
       alignSelf: "center",
-      margin: 0
+      margin: 0,
     } as any;
+
+    const borderStyle = {
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+    }
+
+    if (this.props.firstMessage) {
+      if (!this.props.hasNextMessage) {
+        borderStyle.borderTopLeftRadius = borderStyle.borderTopRightRadius = 14;
+      }
+    }
+    
+    if (this.props.position === "left") {
+      borderStyle.borderTopRightRadius = 14;
+    } else {
+      borderStyle.borderTopLeftRadius = 14;
+    }
 
     if (!!currentMessage) {
       if (Platform.OS === 'web') {
@@ -96,35 +136,44 @@ export default class MessageImage<
               </View>
               : <Image
                 {...imageProps}
-                style={[styles.image, imageStyle, { height: "100%", width: "100%" }]}
+                style={[styles.image, imageStyle, { height: "100%", width: "100%" }, borderStyle]}
                 source={content}
               />
             }
           </View>);
       }
       else {
-        return (<View style={[styles.container, containerStyle]}>
-          <Lightbox activeProps={{
-            style: styles.imageActive,
-          }} {...lightboxProps}>
-            <View
-              style={imageContainerStyles}
+        return (
+          <View style={[styles.container, containerStyle]}>
+            <Lightbox
+              activeProps={{
+                style: styles.imageActive,
+              }}
+              renderHeader={() => null}
+              onOpen={() => this.setState({lightboxOpen: true})}
+              onClose={() => this.setState({lightboxOpen: false})}
+              {...lightboxProps}
             >
-              {this.state.error ?
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#1a1a1a" }}>
-                  <Text style={{ color: "#494949", fontSize: 64 }}>
-                    !
-                </Text>
-                </View>
-                : <Image
-                  {...imageProps}
-                  style={[styles.image, imageStyle, { height: "100%", width: "100%" }]}
-                  source={content}
-                />
-              }
-            </View>
-          </Lightbox>
-        </View>);
+              <View
+                style={imageContainerStyles}
+              >
+                {this.state.error ?
+                  <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#1a1a1a" }}>
+                    <Text style={{ color: "#494949", fontSize: 64 }}>
+                      !
+                    </Text>
+                  </View>
+                  : <Image
+                    {...imageProps}
+                    style={[styles.image, imageStyle, { height: "100%", width: "100%" }, borderStyle]}
+                    source={content}
+                  />
+                }
+                <LoadingOverlay loading={this.props.currentMessage?.pending && !this.state.lightboxOpen || false} />
+              </View>
+            </Lightbox>
+          </View>
+        );
       }
     }
     return null;
