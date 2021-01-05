@@ -377,11 +377,25 @@ export default class Bubble<
       const {
         currentMessage,
         previousMessage,
-        nextMessage
+        nextMessage,
+        position,
       } = this.props
 
-      const firstMessage = previousMessage?.user?._id !== currentMessage?.user?._id;
-      const hasNextMessage = nextMessage?.user?._id === currentMessage?.user?._id;
+      const firstMessage = !(
+        currentMessage &&
+        previousMessage &&
+        position &&
+        isSameUser(currentMessage, previousMessage) &&
+        isSameDay(currentMessage, previousMessage)
+      );
+
+      const hasNextMessage = (
+        currentMessage &&
+        nextMessage &&
+        position &&
+        isSameUser(currentMessage, nextMessage) &&
+        isSameDay(currentMessage, nextMessage)
+      );
 
       return (
         <MessageImage

@@ -111,9 +111,8 @@ export default class MessageImage<
     }
 
     if (this.props.firstMessage) {
-      if (!this.props.hasNextMessage) {
-        borderStyle.borderTopLeftRadius = borderStyle.borderTopRightRadius = 14;
-      }
+      borderStyle.borderTopLeftRadius = 14;
+      borderStyle.borderTopRightRadius = 14;
     }
 
     if (this.props.position === "left") {
