@@ -120,11 +120,11 @@ export default class MessageImage<
     } else {
       borderStyle.borderTopLeftRadius = 14;
     }
-    
-    if (Platform.OS === 'android'){
+
+    if (Platform.OS === 'android') {
       borderStyle.borderTopRightRadius = 14;
       borderStyle.borderTopLeftRadius = 14;
-    } 
+    }
 
     if (!!currentMessage) {
       if (Platform.OS === 'web') {
